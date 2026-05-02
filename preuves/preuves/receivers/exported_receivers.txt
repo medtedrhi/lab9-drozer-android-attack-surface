@@ -1,21 +1,62 @@
 Command used:
 run app.broadcast.info -a owasp.sat.agoat
 
-Purpose:
-Identify exported Broadcast Receivers in the Android application.
+Target package:
+owasp.sat.agoat
 
-Observed result:
-[PASTE HERE THE OUTPUT OF THE DROZER COMMAND]
+Application:
+AndroGoat - Insecure App (Kotlin)
+
+Observed broadcast receivers:
+
+1. owasp.sat.agoat.ShowDataReceiver
+   Permission: null
+
+2. androidx.profileinstaller.ProfileInstallReceiver
+   Permission: android.permission.DUMP
+
+Manifest confirmation:
+
+ShowDataReceiver:
+- enabled="true"
+- exported="true"
+- No permission declared
+
+ProfileInstallReceiver:
+- enabled="true"
+- exported="true"
+- permission="android.permission.DUMP"
+- Contains intent filters for:
+  androidx.profileinstaller.action.INSTALL_PROFILE
+  androidx.profileinstaller.action.SKIP_FILE
+  androidx.profileinstaller.action.SAVE_PROFILE
+  androidx.profileinstaller.action.BENCHMARK_OPERATION
+
+Attack surface confirmation:
+Drozer attack surface summary shows:
+- 2 broadcast receivers exported
 
 Analysis:
-Broadcast Receivers marked as exported can receive Intents from other applications.
-If a Receiver does not validate the received action or sender, it may trigger unintended application behavior.
+The main security concern is ShowDataReceiver because it is exported and has no permission protection.
+
+An exported broadcast receiver without permission protection can receive broadcasts from other applications. If it does not validate the received action or sender, it may trigger unintended behavior.
+
+The ProfileInstallReceiver is also exported, but it is protected by android.permission.DUMP, so the risk is lower.
 
 Risk:
 Unauthorized triggering of application logic through external broadcasts.
 
+Severity:
+- ShowDataReceiver: Medium
+- ProfileInstallReceiver: Low
+
 Recommendation:
-Set android:exported="false" for internal Receivers.
-Protect exported Receivers with permissions when needed.
-Validate the received Intent action before executing logic.
-Ignore unexpected or malformed Intents.
+- Set android:exported="false" for internal receivers.
+- Add permission protection if the receiver must remain exported.
+- Validate the received Intent action before executing logic.
+- Ignore unexpected or malformed broadcasts.
+
+Evidence screenshots:
+- screenshots/12_exported_receivers.png
+- screenshots/09_attack_surface.png
+- screenshots/14_manifest_permissions.png
