@@ -1,0 +1,22 @@
+Command used:
+run app.provider.info -a owasp.sat.agoat
+run scanner.provider.finduris -a owasp.sat.agoat
+
+Purpose:
+Identify exported Content Providers and discover referenced provider URIs.
+
+Observed result:
+[PASTE HERE THE OUTPUT OF THE DROZER PROVIDER COMMANDS]
+
+Analysis:
+Content Providers can expose application data through content URIs.
+If a Provider is exported without read or write permissions, other applications may access or modify application data.
+
+Risk:
+Unauthorized access to application data or unauthorized modification of stored information.
+
+Recommendation:
+Set android:exported="false" for internal Providers.
+If a Provider must be exported, protect it with readPermission and writePermission.
+Use signature-level permissions for sensitive data.
+Validate URI paths, projections, selections, and input parameters.

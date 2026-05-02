@@ -1,0 +1,41 @@
+Evidence File: Exported Activities Analysis
+Tool: Drozer
+Target Application: AndroGoat
+Package: owasp.sat.agoat
+Command used:
+run app.activity.info -a owasp.sat.agoat
+
+Objective:
+Identify exported Android Activities and evaluate whether they are protected by permissions.
+
+Observed Results:
+The Drozer command lists Activities exposed by the target application. Exported Activities are components that can potentially be launched by other applications if they are not protected by permissions.
+
+Components to document:
+- Activity name:
+- Exported state:
+- Required permission:
+- Intent filters:
+- Risk level:
+- Notes:
+
+Example Finding:
+Component: owasp.sat.agoat.MainActivity
+Exported: true
+Permission: null / not specified
+Risk:
+An exported Activity may be launched directly by another application. If the Activity exposes sensitive screens or performs privileged actions without internal authorization checks, it may allow unauthorized access or bypass the normal application flow.
+
+Security Impact:
+- Unauthorized access to internal screens
+- Bypass of normal navigation flow
+- Possible exposure of sensitive functionality
+
+Recommendation:
+- Set android:exported="false" for internal Activities.
+- Keep only the launcher Activity exported when required.
+- Add permission checks for Activities that must remain exported.
+- Validate incoming intents before processing them.
+
+Status:
+To be reviewed and confirmed using the final Drozer output.

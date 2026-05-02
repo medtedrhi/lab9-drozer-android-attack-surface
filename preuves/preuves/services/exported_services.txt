@@ -1,0 +1,20 @@
+Command used:
+run app.service.info -a owasp.sat.agoat
+
+Purpose:
+Identify exported Services in the Android application.
+
+Observed result:
+[PASTE HERE THE OUTPUT OF THE DROZER COMMAND]
+
+Analysis:
+Services marked as exported can potentially be started or bound by other applications.
+If an exported Service is not protected by a permission or does not validate incoming Intents, another application may trigger internal background functionality.
+
+Risk:
+Unauthorized execution of background operations or abuse of internal application logic.
+
+Recommendation:
+Set android:exported="false" for internal Services.
+Protect exported Services with signature-level permissions when external access is necessary.
+Validate all received Intents before executing service logic.

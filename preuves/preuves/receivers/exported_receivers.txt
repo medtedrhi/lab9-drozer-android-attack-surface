@@ -1,0 +1,21 @@
+Command used:
+run app.broadcast.info -a owasp.sat.agoat
+
+Purpose:
+Identify exported Broadcast Receivers in the Android application.
+
+Observed result:
+[PASTE HERE THE OUTPUT OF THE DROZER COMMAND]
+
+Analysis:
+Broadcast Receivers marked as exported can receive Intents from other applications.
+If a Receiver does not validate the received action or sender, it may trigger unintended application behavior.
+
+Risk:
+Unauthorized triggering of application logic through external broadcasts.
+
+Recommendation:
+Set android:exported="false" for internal Receivers.
+Protect exported Receivers with permissions when needed.
+Validate the received Intent action before executing logic.
+Ignore unexpected or malformed Intents.
