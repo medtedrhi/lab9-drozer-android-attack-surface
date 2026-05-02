@@ -1,20 +1,44 @@
 Command used:
 run app.service.info -a owasp.sat.agoat
 
-Purpose:
-Identify exported Services in the Android application.
+Target package:
+owasp.sat.agoat
 
-Observed result:
-[PASTE HERE THE OUTPUT OF THE DROZER COMMAND]
+Application:
+AndroGoat - Insecure App (Kotlin)
+
+Observed exported service:
+
+1. owasp.sat.agoat.DownloadInvoiceService
+   Permission: null
+
+Manifest confirmation:
+DownloadInvoiceService:
+- enabled="true"
+- exported="true"
+
+Attack surface confirmation:
+Drozer attack surface summary shows:
+- 1 service exported
 
 Analysis:
-Services marked as exported can potentially be started or bound by other applications.
-If an exported Service is not protected by a permission or does not validate incoming Intents, another application may trigger internal background functionality.
+The DownloadInvoiceService is exported and does not require any permission.
+
+Because the service is exported, another application may be able to start it from outside the application. Since the service name suggests invoice downloading, this could expose internal background functionality if the service does not validate the caller or the received Intent.
 
 Risk:
-Unauthorized execution of background operations or abuse of internal application logic.
+Unauthorized execution of background functionality.
+
+Severity:
+Medium
 
 Recommendation:
-Set android:exported="false" for internal Services.
-Protect exported Services with signature-level permissions when external access is necessary.
-Validate all received Intents before executing service logic.
+- Set android:exported="false" if the service is only used internally.
+- If external access is required, protect the service with a signature-level permission.
+- Validate all incoming Intents before executing service logic.
+- Reject null, malformed, or unexpected Intents.
+
+Evidence screenshots:
+- screenshots/11_exported_services.png
+- screenshots/09_attack_surface.png
+- screenshots/14_manifest_permissions.png
