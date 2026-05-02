@@ -1,22 +1,80 @@
-Command used:
+Commands used:
 run app.provider.info -a owasp.sat.agoat
 run scanner.provider.finduris -a owasp.sat.agoat
 
-Purpose:
-Identify exported Content Providers and discover referenced provider URIs.
+Target package:
+owasp.sat.agoat
 
-Observed result:
-[PASTE HERE THE OUTPUT OF THE DROZER PROVIDER COMMANDS]
+Application:
+AndroGoat - Insecure App (Kotlin)
+
+Observed content provider:
+
+Authority:
+owasp.sat.agoat.provider.userpinsprovider
+
+Content Provider:
+owasp.sat.agoat.ContentProviderActivity
+
+Read Permission:
+null
+
+Write Permission:
+null
+
+Multiprocess Allowed:
+False
+
+Grant URI Permissions:
+False
+
+Manifest confirmation:
+ContentProviderActivity:
+- exported="true"
+- authorities="owasp.sat.agoat.provider.userpinsprovider"
+
+Attack surface confirmation:
+Drozer attack surface summary shows:
+- 1 content provider exported
+
+Provider URI discovery result:
+The following URIs were identified by Drozer:
+
+1. content://owasp.sat.agoat.androidx-startup/
+   Result: No response from content URI
+
+2. content://owasp.sat.agoat.provider.userpinsprovider
+   Result: No response from content URI
+
+3. content://owasp.sat.agoat.provider.userpinsprovider/
+   Result: No response from content URI
+
+4. content://owasp.sat.agoat.androidx-startup
+   Result: No response from content URI
+
+Drozer result:
+None of the content URIs replied.
 
 Analysis:
-Content Providers can expose application data through content URIs.
-If a Provider is exported without read or write permissions, other applications may access or modify application data.
+The provider owasp.sat.agoat.provider.userpinsprovider is exported and does not define read or write permissions.
+
+Even though the discovered URIs did not reply during the scan, the provider remains a security concern because it is exported without readPermission or writePermission.
 
 Risk:
-Unauthorized access to application data or unauthorized modification of stored information.
+An exported content provider without read or write permissions may expose application data or allow unauthorized data modification if accessible endpoints are implemented.
+
+Severity:
+High
 
 Recommendation:
-Set android:exported="false" for internal Providers.
-If a Provider must be exported, protect it with readPermission and writePermission.
-Use signature-level permissions for sensitive data.
-Validate URI paths, projections, selections, and input parameters.
+- Set android:exported="false" if the provider is only used internally.
+- Add android:readPermission and android:writePermission if the provider must be exported.
+- Use signature-level permissions for sensitive data.
+- Validate URI paths, query projections, selections, and input parameters.
+- Do not expose sensitive tables or files through public providers.
+
+Evidence screenshots:
+- screenshots/13_exported_providers.png
+- screenshots/15_provider_finduris.png
+- screenshots/09_attack_surface.png
+- screenshots/14_manifest_permissions.png
